@@ -6,14 +6,16 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
-import { ScanLine, Crown, User as UserIcon, Mail, Lock } from 'lucide-react';
+import { ScanLine, Crown, User as UserIcon, Mail, Lock, Shield } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import { toast } from '@/hooks/use-toast';
 
 const Login = () => {
   const { login, isLoading, isAuthenticated } = useAuth();
   const location = useLocation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [adminCode, setAdminCode] = useState('');
   const [role, setRole] = useState<'admin' | 'user'>('user');
 
   // Redirect if already authenticated
@@ -26,6 +28,16 @@ const Login = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) return;
+    
+    // Check admin access code if admin role is selected
+    if (role === 'admin' && adminCode !== 'ADMIN2024') {
+      toast({
+        title: "Access denied",
+        description: "Invalid admin access code",
+        variant: "destructive",
+      });
+      return;
+    }
     
     try {
       await login(email, password, role);
@@ -48,11 +60,11 @@ const Login = () => {
         <CardContent className="space-y-6">
           {/* Role Selection */}
           <div className="space-y-3">
-            <Label className="text-sm font-medium">Login as</Label>
+            <Label className="text-sm font-medium">Account Type</Label>
             <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
               <div className="flex items-center space-x-2">
                 <UserIcon className="w-4 h-4 text-blue-600" />
-                <span className="text-sm font-medium">User</span>
+                <span className="text-sm font-medium">User Access</span>
               </div>
               <Switch
                 checked={role === 'admin'}
@@ -61,7 +73,7 @@ const Login = () => {
               />
               <div className="flex items-center space-x-2">
                 <Crown className="w-4 h-4 text-purple-600" />
-                <span className="text-sm font-medium">Admin</span>
+                <span className="text-sm font-medium">Admin Access</span>
               </div>
             </div>
           </div>
@@ -98,10 +110,30 @@ const Login = () => {
                 />
               </div>
             </div>
+
+            {/* Admin Access Code Field */}
+            {role === 'admin' && (
+              <div className="space-y-2">
+                <Label htmlFor="adminCode">Admin Access Code</Label>
+                <div className="relative">
+                  <Shield className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
+                  <Input
+                    id="adminCode"
+                    type="password"
+                    placeholder="Enter admin code"
+                    value={adminCode}
+                    onChange={(e) => setAdminCode(e.target.value)}
+                    className="pl-10 transition-all duration-200 focus:ring-2 focus:ring-purple-500"
+                    required
+                  />
+                </div>
+                <p className="text-xs text-gray-500">Contact system administrator for access code</p>
+              </div>
+            )}
             
             <Button 
               type="submit"
-              disabled={isLoading || !email || !password}
+              disabled={isLoading || !email || !password || (role === 'admin' && !adminCode)}
               className={`w-full transition-colors duration-200 ${
                 role === 'admin' 
                   ? 'bg-purple-600 hover:bg-purple-700' 

@@ -5,12 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { 
   Users, 
-  Database, 
-  Settings, 
   Crown, 
   LogOut, 
   Plus, 
@@ -35,8 +31,6 @@ const AdminDashboard = () => {
   const systemStats = [
     { title: 'Total Users', value: '12', change: '+2 this week', icon: Users },
     { title: 'Scanned Items', value: '1,234', change: '+45 today', icon: ScanLine },
-    { title: 'Active Sessions', value: '8', change: '3 online now', icon: Activity },
-    { title: 'System Status', value: 'Healthy', change: '99.9% uptime', icon: Database },
   ];
 
   const recentActivity = [
@@ -79,17 +73,16 @@ const AdminDashboard = () => {
       {/* Main Content */}
       <div className="container mx-auto p-6 max-w-7xl">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4 max-w-lg">
+          <TabsList className="grid w-full grid-cols-3 max-w-lg">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="users">Users</TabsTrigger>
             <TabsTrigger value="scans">Scans</TabsTrigger>
-            <TabsTrigger value="settings">Settings</TabsTrigger>
           </TabsList>
 
           {/* Overview Tab */}
           <TabsContent value="overview" className="space-y-6">
             {/* Stats Cards */}
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-6 md:grid-cols-2">
               {systemStats.map((stat, index) => (
                 <Card key={index}>
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -204,31 +197,6 @@ const AdminDashboard = () => {
                     </CardContent>
                   </Card>
                 </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* Settings Tab */}
-          <TabsContent value="settings" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>System Settings</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid gap-4 md:grid-cols-2">
-                  <div className="space-y-2">
-                    <Label htmlFor="systemName">System Name</Label>
-                    <Input id="systemName" defaultValue="ScannerApp" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="maxUsers">Max Users</Label>
-                    <Input id="maxUsers" type="number" defaultValue="100" />
-                  </div>
-                </div>
-                <Button className="bg-purple-600 hover:bg-purple-700">
-                  <Settings className="w-4 h-4 mr-2" />
-                  Save Settings
-                </Button>
               </CardContent>
             </Card>
           </TabsContent>

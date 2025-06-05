@@ -8,7 +8,6 @@ import { Badge } from '@/components/ui/badge';
 import { 
   ScanLine, 
   Camera, 
-  Database, 
   User as UserIcon, 
   LogOut, 
   History,
@@ -32,7 +31,6 @@ const UserDashboard = () => {
   const userStats = [
     { title: 'Today\'s Scans', value: '12', icon: ScanLine },
     { title: 'This Week', value: '45', icon: Activity },
-    { title: 'Success Rate', value: '98%', icon: Database },
   ];
 
   const handleStartScan = () => {
@@ -94,7 +92,7 @@ const UserDashboard = () => {
           {/* Scanner Tab */}
           <TabsContent value="scanner" className="space-y-6">
             {/* Stats Cards */}
-            <div className="grid gap-6 md:grid-cols-3">
+            <div className="grid gap-6 md:grid-cols-2">
               {userStats.map((stat, index) => (
                 <Card key={index}>
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
